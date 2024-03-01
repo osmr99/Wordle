@@ -45,4 +45,9 @@ public class WordleView : MonoBehaviour
 
     }
 
+    public void resetGame()
+    {
+        Setup();
+    }
+
 }

@@ -19,13 +19,13 @@ public class Cells
 public class WordleModel : MonoBehaviour
 {
 
-    public int currentAttempt = 0;
+    static public int currentAttempt = 1;
     public Cells[,] cells = new Cells[6, 5];
     [SerializeField] TextAsset possibleAnswersAsset;
     [SerializeField] TextAsset allowedWordsAsset;
-    string[] possibleAnswers;
-    string[] allowedWords;
-    string correctAnswer;
+    static string[] possibleAnswers;
+    static public string[] allowedWords;
+    static public string correctAnswer;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,17 +43,24 @@ public class WordleModel : MonoBehaviour
     {
         possibleAnswers = possibleAnswersAsset.ToString().Split("\n");
         allowedWords = allowedWordsAsset.ToString().Split("\n");
-        correctAnswer = allowedWords[UnityEngine.Random.Range(0, possibleAnswers.Length)];
-        //Debug.Log(correctAnswer);
+        correctAnswer = allowedWords[UnityEngine.Random.Range(0, possibleAnswers.Length)].Trim();
+        Debug.Log(correctAnswer);
     }
 
     public static bool isValidGuess(string s)
     {
+        if(s == correctAnswer)
+            return true;
         return false;
     }
 
     void UpdateCells()
     {
 
+    }
+
+    public void resetGame()
+    {
+        Setup();
     }
 }

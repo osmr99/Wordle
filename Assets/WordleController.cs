@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class WordleController : MonoBehaviour
 {
-    [SerializeField] TMP_InputField playerInput;
+    [SerializeField] public TMP_InputField playerInput;
     [SerializeField] TMP_Text playerInputText;
     [SerializeField] Button submitGuess;
     //[SerializeField] TextMeshProUGUI submitGuessText;
@@ -28,20 +28,25 @@ public class WordleController : MonoBehaviour
 
     void GameSetup()
     {
+        WordleModel.currentAttempt = 1;
+        submitGuess.enabled = true;
+        playerInput.enabled = true;
         playerInput.text = null;
         playerInputText.color = Color.black;
         submitGuessText.color = Color.black;
         submitGuessText.text = "Submit";
         submitGuessText.fontSize = 24;
         submitGuessText.maxVisibleLines = 1;
+        submittedWords = new List<string>();
     }
 
     public void SubmitGuess()
     {
         if (playerInput.text.Length == 5)
         {
-            bool numbers = false; // Checking for numbers in the 5 characters word
-            for(int i = 0; i < playerInput.text.Length; i++)
+            bool numbers = false; 
+            bool allowedWord = false;
+            for(int i = 0; i < playerInput.text.Length; i++) // Checking for numbers in the 5 characters word
             {
                 if (char.IsDigit(playerInput.text, i) == true)
                 {
@@ -51,27 +56,56 @@ public class WordleController : MonoBehaviour
             if (numbers)
             {
                 foundNumbers();
-                numbers = false;
             }
-            else if (submittedWords.Contains(playerInput.text) || submittedWords.Contains(playerInput.text.ToLower())) // Checking if the word has been used already
+            else if (numbers == false) // No numbers found
             {
-                playerInputText.color = Color.cyan;
-                submitGuessText.fontSize = 18;
-                submitGuessText.maxVisibleLines = 2;
-                submitGuessText.text = "You already used this word";
-            }
-            else
-            {
-                WordleModel.isValidGuess(playerInput.text.ToLower()); // Checking for the guess
-                textReset();
-                submittedWords.Add(playerInput.text.ToLower());
-                Debug.Log("Submitted!" + " " + playerInput.text.ToLower());
-                playerInput.text = null;
+                bool usedWord = false;
+                if (submittedWords.Contains(playerInput.text) || submittedWords.Contains(playerInput.text.ToLower())) // Checking if the word has been used already
+                {
+                    usedWord = true;
+                    playerInputText.color = Color.cyan;
+                    submitGuessText.fontSize = 18;
+                    submitGuessText.maxVisibleLines = 2;
+                    submitGuessText.text = "You already used this word";
+                }
+                if (usedWord == false)
+                {
+                    for (int i = 0; i < WordleModel.allowedWords.Length; i++) // Checking if the word exists from the allowed words.txt
+                    {
+                        if (playerInput.text == WordleModel.allowedWords[i].Trim())
+                        {
+                            allowedWord = true;
+                            i = WordleModel.allowedWords.Length; // When it finds the word,this will end the loop
+                        }
+                    }
+                    if (allowedWord) // The guess is valid, now it will check with the real answer
+                    {
+                        bool result = false;
+                        result = WordleModel.isValidGuess(playerInput.text.ToLower()); // Checking for the guess
+                        WordleModel.currentAttempt++;
+                        submittedWords.Add(playerInput.text.ToLower());
+                        Debug.Log("Submitted" + " " + playerInput.text.ToLower());
+                        if (result)
+                            WinGame();
+                        else if (WordleModel.currentAttempt > 6)
+                            LoseGame();
+                        else
+                            playerInput.text = null;
+                    }
+                    else // The word is not valid
+                    {
+                        playerInputText.color = Color.red;
+                        submitGuessText.color = Color.red;
+                        submitGuessText.fontSize = 20;
+                        submitGuessText.maxVisibleLines = 2;
+                        submitGuessText.text = "Not a valid word";
+                    }
+                }
             }
         }
-        else if (playerInput.text != null)
+        else if (playerInput.text != null) // 'If the word is less than 5 characters but more than 0 then...'
         {
-            bool numbers = false; // Checking for numbers to tell the user if they used it.
+            bool numbers = false; // Checking for numbers to tell the user to not used them
             for (int i = 0; i < playerInput.text.Length; i++)
             {
                 if (char.IsDigit(playerInput.text, i) == true)
@@ -80,9 +114,8 @@ public class WordleController : MonoBehaviour
             if (numbers)
             {
                 foundNumbers();
-                numbers = false;
             }
-            else if(playerInput.text.Length > 0)
+            else if(playerInput.text.Length > 0 && playerInput.text.Length < 5)
             {
                 playerInputText.color = Color.red;
                 submitGuessText.color = Color.red;
@@ -90,12 +123,6 @@ public class WordleController : MonoBehaviour
                 submitGuessText.text = "5 characters pls";
                 submitGuessText.maxVisibleLines = 2;
             }
-        }
-        else
-        {
-            playerInputText.color = Color.red;
-            submitGuessText.fontSize = 22;
-            submitGuessText.text = "Make a guess";
         }
     }
 
@@ -118,12 +145,57 @@ public class WordleController : MonoBehaviour
 
     void WinGame()
     {
-
+        playerInput.enabled = false;
+        submitGuess.enabled = false;
+        playerInput.text = "<b>" + playerInput.text + "</b>";
+        submitGuessText.color = Color.green;
+        WordleModel.currentAttempt--;
+        if (WordleModel.currentAttempt == 1)
+        {
+            submitGuessText.fontSize = 29;
+            submitGuessText.text = "HOW?!?";
+        }
+        else if (WordleModel.currentAttempt == 2)
+        {
+            submitGuessText.fontSize = 20;
+            submitGuessText.text = "Outstanding!";
+        }
+        else if (WordleModel.currentAttempt == 3)
+        {
+            submitGuessText.fontSize = 25;
+            submitGuessText.text = "Very good";
+        }
+        else if (WordleModel.currentAttempt == 4)
+        {
+            submitGuessText.fontSize = 25;
+            submitGuessText.text = "You got it!";
+        }
+        else if (WordleModel.currentAttempt == 5)
+        {
+            submitGuessText.fontSize = 32;
+            submitGuessText.text = "Alright";
+        }
+        else if (WordleModel.currentAttempt == 6)
+        {
+            submitGuessText.fontSize = 34;
+            submitGuessText.text = "PHEW";
+        }
     }
 
     void LoseGame()
     {
+        playerInput.enabled = false;
+        submitGuess.enabled = false;
+        playerInput.text = "<b>" + playerInput.text + "</b>";
+        submitGuessText.color = Color.red;
+        submitGuessText.fontSize = 16;
+        submitGuessText.maxVisibleLines = 2;
+        submitGuessText.text = "<b>The word was " + WordleModel.correctAnswer + "</b>";
+    }
 
+    public void resetGame()
+    {
+        GameSetup();
     }
 
 }
