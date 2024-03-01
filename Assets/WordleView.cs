@@ -26,17 +26,23 @@ public class WordleView : MonoBehaviour
 
     void Setup()
     {
+        // Sets all cells to white.
         for (int i = 0; i < 6; i++)
         {
             GameObject currentRow = rows[i];
-            Debug.Log("Ok");
+            //Debug.Log("Ok");
             for (int j = 0; j < 5; j++)
             {
                 Image currentCell = currentRow.transform.GetChild(j).GetComponent<Image>();
                 currentCell.color = Color.white;
-                Debug.Log("Nice");
+                //Debug.Log("Nice");
             }
         }
+    }
+
+    void UpdateView()
+    {
+
     }
 
 }
