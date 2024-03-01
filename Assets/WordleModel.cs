@@ -10,7 +10,7 @@ public class WordleModel : MonoBehaviour
 {
 
     public int currentAttempt = 0;
-    public char[,] cells;
+    //public char[,] cells;
     [SerializeField] TextAsset possibleAnswersAsset;
     [SerializeField] TextAsset allowedWordsAsset;
     string[] possibleAnswers;
