@@ -11,8 +11,6 @@ public class WordleView : MonoBehaviour
     [SerializeField] GameObject view;
     [SerializeField] WordleModel model;
     [SerializeField] WordleController controller;
-    //GameObject currentRow;
-    //GameObject theCell;
 
     // Start is called before the first frame update
     void Start()
@@ -39,20 +37,34 @@ public class WordleView : MonoBehaviour
         for (int i = 0; i < 6; i++)
         {
             GameObject currentRow = rows[i];
-            //Debug.Log("Ok");
             for (int j = 0; j < 5; j++)
             {
                 Image currentCell = currentRow.transform.GetChild(j).GetComponent<Image>();
                 currentCell.color = Color.white;
-                //Debug.Log("Nice");
+            }
+        }
+        // Sets all chars to blanks
+        for (int i = 0; i < 6; i++)
+        {
+            GameObject currentRow = rows[i];
+            for (int j = 0; j < 5; j++)
+            {
+                TMP_Text wordChar = currentRow.transform.GetChild(j).GetComponentInChildren<TMP_Text>();
+                wordChar.text = "__";
             }
         }
     }
 
 
-    void UpdateView()
+    public void UpdateView(int color)
     {
-
+        Image currentCell = model.wordChar.transform.GetComponentInParent<Image>();
+        if (color == 1)
+            currentCell.color = Color.green;
+        else if (color == 2)
+            currentCell.color = Color.yellow;
+        else if (color == 3)
+            currentCell.color = Color.gray;
     }
 
     public void resetGame()

@@ -70,13 +70,20 @@ public class WordleController : MonoBehaviour
                             i = model.allowedWords.Length; // When it finds the word,this will end the loop
                         }
                     }
+                    for (int i = 0; i < model.possibleAnswers.Length; i++) // Checking if the word exists from the allowed words.txt
+                    {
+                        if (playerInput.text == model.possibleAnswers[i].Trim())
+                        {
+                            allowedWord = true;
+                            i = model.possibleAnswers.Length; // When it finds the word,this will end the loop
+                        }
+                    }
                     if (allowedWord) // The guess is valid, now it will check with the real answer
                     {
                         bool result = false;
                         result = model.isValidGuess(playerInput.text.ToLower()); // Checking for the guess
                         model.currentAttempt++;
-                        submittedWords.Add(playerInput.text.ToLower());
-                        Debug.Log("Submitted" + " " + playerInput.text.ToLower());
+                        submittedWords.Add(playerInput.text.ToLower()); // Adding the guess to the Used Words List
                         model.UpdateCells();
                         if (result)
                             WinGame();

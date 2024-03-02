@@ -29,6 +29,8 @@ public class WordleModel : MonoBehaviour
     public string correctAnswer;
     [SerializeField] WordleView view;
     [SerializeField] WordleController controller;
+    public TMP_Text wordChar;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,13 +43,11 @@ public class WordleModel : MonoBehaviour
         
     }
 
-    //[ContextMenu("Test")]
     void Setup()
     {
         possibleAnswers = possibleAnswersAsset.ToString().Split("\n");
         allowedWords = allowedWordsAsset.ToString().Split("\n");
-        correctAnswer = allowedWords[UnityEngine.Random.Range(0, possibleAnswers.Length)].Trim();
-        Debug.Log(correctAnswer);
+        correctAnswer = possibleAnswers[UnityEngine.Random.Range(0, possibleAnswers.Length)].Trim();
     }
 
     public bool isValidGuess(string s)
@@ -57,43 +57,48 @@ public class WordleModel : MonoBehaviour
         return false;
     }
 
-    public void UpdateCells()
+    public void UpdateCells() // The method for checking if the string matches with the answers and also manages the cells colors.
     {
-        // Setting up letters
         int temp = currentAttempt - 2;
         string theWord = controller.playerInput.text;
-        //Debug.Log(theWord[0]);
-        //Debug.Log(theWord[1]);
-        //Debug.Log(theWord[2]);
-        //Debug.Log(theWord[3]);
-        //Debug.Log(theWord[4]);
-        //GameObject theCurrentRow = view.rows[temp];
-        //char currentChar;
         GameObject currentRow = view.rows[temp];
         for (int i = 0; i < 5; i++)
         {
             string currentChar = theWord[i].ToString();
-            TMP_Text wordChar = currentRow.transform.GetChild(i).GetComponentInChildren<TMP_Text>();
+            wordChar = currentRow.transform.GetChild(i).GetComponentInChildren<TMP_Text>();
             wordChar.text = currentChar;
-            Debug.Log(wordChar.text);
-            //Image currentCell = currentRow.transform.GetChild(j).GetComponent<Image>();
-            //currentCell.color = Color.white;
+            for(int j = 0; j < correctAnswer.Length; j++)
+            {
+                bool found = false;
+                if (theWord[i] == correctAnswer[i])
+                {
+                    view.UpdateView(1); // Correct letter and position!
+                    found = true;
+                } 
+                else if (theWord[i] != correctAnswer[i])
+                {
+                    bool existent = false;
+                    for(int k = 0; k < correctAnswer.Length; k++)
+                    {
+                        if (theWord[i] == correctAnswer[k] && found == true)
+                        {
+                            view.UpdateView(1); // Found a repeated letter in the right position
+                            existent = true;
+                        }
+
+                        else if (theWord[i] == correctAnswer[k] && found == false)
+                        {
+                            view.UpdateView(2); // Correct letter but incorrect position
+                            existent = true;
+                        }
+                    }
+                    if(existent == false)
+                        view.UpdateView(3); // Non existent letter
+                }
+
+            }
         }
     }
-
-    /*for (int i = 0; i < 6; i++)
-        {
-            GameObject currentRow = rows[i];
-            //Debug.Log("Ok");
-            for (int j = 0; j < 5; j++)
-            {
-                Image currentCell = currentRow.transform.GetChild(j).GetComponent<Image>();
-                currentCell.color = Color.white;
-                //Debug.Log("Nice");
-            }
-        }*/
-
-
     public void resetGame()
     {
         Setup();
