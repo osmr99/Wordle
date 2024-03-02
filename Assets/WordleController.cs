@@ -7,16 +7,13 @@ using UnityEngine.UI;
 public class WordleController : MonoBehaviour
 {
     [SerializeField] public TMP_InputField playerInput;
-    public static TMP_InputField staticPlayerInput;
-    [SerializeField] TMP_Text playerInputText;
-    public static TMP_Text staticPlayerInputText;
+    [SerializeField] public TMP_Text playerInputText;
     [SerializeField] Button submitGuess;
-    //[SerializeField] TextMeshProUGUI submitGuessText;
-    [SerializeField] TMP_Text submitGuessText;
-    public static TMP_Text staticSubmitGuessText;
+    [SerializeField] public TMP_Text submitGuessText;
     [SerializeField] WordleModel model;
     [SerializeField] WordleView view;
     List<string> submittedWords = new List<string>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,19 +28,10 @@ public class WordleController : MonoBehaviour
 
     void GameSetup()
     {
-        staticPlayerInputText = playerInputText;
-        staticSubmitGuessText = submitGuessText;
-        staticPlayerInput = playerInput;
-        WordleModel.currentAttempt = 1;
+        model.currentAttempt = 1;
         submitGuess.enabled = true;
         playerInput.enabled = true;
-        WordleView.emptyText();
-        //WordleView.Setup(); Continue Here
-        //playerInputText.color = Color.black;
-        //submitGuessText.color = Color.black;
-        //submitGuessText.text = "Submit";
-        //submitGuessText.fontSize = 24;
-        //submitGuessText.maxVisibleLines = 1;
+        view.emptyText();
         submittedWords = new List<string>();
     }
 
@@ -62,7 +50,7 @@ public class WordleController : MonoBehaviour
             }
             if (numbers)
             {
-                WordleView.foundNumbers();
+                view.foundNumbers();
             }
             else if (numbers == false) // No numbers found
             {
@@ -70,35 +58,36 @@ public class WordleController : MonoBehaviour
                 if (submittedWords.Contains(playerInput.text) || submittedWords.Contains(playerInput.text.ToLower())) // Checking if the word has been used already
                 {
                     usedWord = true;
-                    WordleView.alreadyUsed();
+                    view.alreadyUsed();
                 }
                 if (usedWord == false)
                 {
-                    for (int i = 0; i < WordleModel.allowedWords.Length; i++) // Checking if the word exists from the allowed words.txt
+                    for (int i = 0; i < model.allowedWords.Length; i++) // Checking if the word exists from the allowed words.txt
                     {
-                        if (playerInput.text == WordleModel.allowedWords[i].Trim())
+                        if (playerInput.text == model.allowedWords[i].Trim())
                         {
                             allowedWord = true;
-                            i = WordleModel.allowedWords.Length; // When it finds the word,this will end the loop
+                            i = model.allowedWords.Length; // When it finds the word,this will end the loop
                         }
                     }
                     if (allowedWord) // The guess is valid, now it will check with the real answer
                     {
                         bool result = false;
-                        result = WordleModel.isValidGuess(playerInput.text.ToLower()); // Checking for the guess
-                        WordleModel.currentAttempt++;
+                        result = model.isValidGuess(playerInput.text.ToLower()); // Checking for the guess
+                        model.currentAttempt++;
                         submittedWords.Add(playerInput.text.ToLower());
                         Debug.Log("Submitted" + " " + playerInput.text.ToLower());
+                        model.UpdateCells();
                         if (result)
                             WinGame();
-                        else if (WordleModel.currentAttempt > 6)
+                        else if (model.currentAttempt > 6)
                             LoseGame();
                         else
-                            WordleView.emptyText();
+                            view.emptyText();
                     }
                     else // The word is not valid
                     {
-                        WordleView.notValid();
+                        view.notValid();
                     }
                 }
             }
@@ -113,11 +102,11 @@ public class WordleController : MonoBehaviour
             }
             if (numbers)
             {
-                WordleView.foundNumbers();
+                view.foundNumbers();
             }
             else if(playerInput.text.Length > 0 && playerInput.text.Length < 5)
             {
-                WordleView.fiveCharsPls();
+                view.fiveCharsPls();
             }
         }
     }
@@ -126,46 +115,14 @@ public class WordleController : MonoBehaviour
     {
         playerInput.enabled = false;
         submitGuess.enabled = false;
-        playerInput.text = "<b>" + playerInput.text + "</b>";
-        submitGuessText.color = Color.green;
-        WordleModel.currentAttempt--;
-        if (WordleModel.currentAttempt == 1)
-        {
-            submitGuessText.fontSize = 29;
-            submitGuessText.text = "HOW?!?";
-        }
-        else if (WordleModel.currentAttempt == 2)
-        {
-            submitGuessText.fontSize = 20;
-            submitGuessText.text = "Outstanding!";
-        }
-        else if (WordleModel.currentAttempt == 3)
-        {
-            submitGuessText.fontSize = 25;
-            submitGuessText.text = "Very good";
-        }
-        else if (WordleModel.currentAttempt == 4)
-        {
-            submitGuessText.fontSize = 25;
-            submitGuessText.text = "You got it!";
-        }
-        else if (WordleModel.currentAttempt == 5)
-        {
-            submitGuessText.fontSize = 32;
-            submitGuessText.text = "Alright";
-        }
-        else if (WordleModel.currentAttempt == 6)
-        {
-            submitGuessText.fontSize = 34;
-            submitGuessText.text = "PHEW";
-        }
+        view.viewWinGame();
     }
 
     void LoseGame()
     {
         playerInput.enabled = false;
         submitGuess.enabled = false;
-        WordleView.viewLoseGame();
+        view.viewLoseGame();
     }
 
     public void resetGame()

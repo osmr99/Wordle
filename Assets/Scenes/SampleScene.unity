@@ -700,6 +700,8 @@ MonoBehaviour:
   - {fileID: 833060362}
   - {fileID: 858550203}
   view: {fileID: 93370338}
+  model: {fileID: 1241649322}
+  controller: {fileID: 18690074}
 --- !u!1 &107982173
 GameObject:
   m_ObjectHideFlags: 0
@@ -3699,7 +3701,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: __
+  m_text: c
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3988,7 +3990,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: __
+  m_text: e
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4967,7 +4969,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: __
+  m_text: a
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5833,8 +5835,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1920d919cf255b4cb1422224ab56715, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentAttempt: 0
   possibleAnswersAsset: {fileID: 4900000, guid: 06877de27381e8248b8900379101544d, type: 3}
   allowedWordsAsset: {fileID: 4900000, guid: bedc08a19e22da8419c7b11fa197e980, type: 3}
+  possibleAnswers: []
+  allowedWords: []
+  correctAnswer: 
+  view: {fileID: 93370343}
+  controller: {fileID: 18690074}
 --- !u!1 &1256394954
 GameObject:
   m_ObjectHideFlags: 0
@@ -7765,7 +7773,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: __
+  m_text: b
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8292,7 +8300,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: __
+  m_text: d
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

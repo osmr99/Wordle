@@ -7,15 +7,17 @@ using TMPro;
 public class WordleView : MonoBehaviour
 {
 
-    [SerializeField] GameObject[] rows = new GameObject[6];
+    [SerializeField] public GameObject[] rows = new GameObject[6];
     [SerializeField] GameObject view;
+    [SerializeField] WordleModel model;
+    [SerializeField] WordleController controller;
     //GameObject currentRow;
     //GameObject theCell;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        Setup();
     }
 
     // Update is called once per frame
@@ -24,14 +26,15 @@ public class WordleView : MonoBehaviour
         
     }
 
-    void Setup()
+    public void Setup()
     {
         // Sets all text back to normal
-        WordleController.staticPlayerInputText.color = Color.black;
-        WordleController.staticSubmitGuessText.color = Color.black;
-        WordleController.staticSubmitGuessText.text = "Submit";
-        WordleController.staticSubmitGuessText.fontSize = 24;
-        WordleController.staticSubmitGuessText.maxVisibleLines = 1;
+        controller.playerInputText.color = Color.black;
+        controller.submitGuessText.color = Color.black;
+        controller.submitGuessText.text = "Submit";
+        controller.submitGuessText.fontSize = 24;
+        controller.submitGuessText.maxVisibleLines = 1;
+
         // Sets all cells to white
         for (int i = 0; i < 6; i++)
         {
@@ -46,6 +49,7 @@ public class WordleView : MonoBehaviour
         }
     }
 
+
     void UpdateView()
     {
 
@@ -56,62 +60,99 @@ public class WordleView : MonoBehaviour
         Setup();
     }
 
-    static public void emptyText()
+    public void emptyText()
     {
-        WordleController.staticPlayerInput.text = null;
+        controller.playerInput.text = null;
     }
 
-    static public void alreadyUsed()
+    public void alreadyUsed()
     {
-        WordleController.staticPlayerInputText.color = Color.cyan;
-        WordleController.staticSubmitGuessText.fontSize = 18;
-        WordleController.staticSubmitGuessText.maxVisibleLines = 2;
-        WordleController.staticSubmitGuessText.text = "You already used this word";
+        controller.playerInputText.color = Color.cyan;
+        controller.submitGuessText.fontSize = 18;
+        controller.submitGuessText.maxVisibleLines = 2;
+        controller.submitGuessText.text = "You already used this word";
 
     }
 
-    static public void notValid()
+    public void notValid()
     {
-        WordleController.staticPlayerInputText.color = Color.red;
-        WordleController.staticSubmitGuessText.color = Color.red;
-        WordleController.staticSubmitGuessText.fontSize = 20;
-        WordleController.staticSubmitGuessText.maxVisibleLines = 2;
-        WordleController.staticSubmitGuessText.text = "Not a valid word";
+        controller.playerInputText.color = Color.red;
+        controller.submitGuessText.color = Color.red;
+        controller.submitGuessText.fontSize = 20;
+        controller.submitGuessText.maxVisibleLines = 2;
+        controller.submitGuessText.text = "Not a valid word";
     }
 
-    static public void fiveCharsPls()
+    public void fiveCharsPls()
     {
-        WordleController.staticPlayerInputText.color = Color.red;
-        WordleController.staticSubmitGuessText.color = Color.red;
-        WordleController.staticSubmitGuessText.fontSize = 20;
-        WordleController.staticSubmitGuessText.text = "5 characters pls";
-        WordleController.staticSubmitGuessText.maxVisibleLines = 2;
+        controller.playerInputText.color = Color.red;
+        controller.submitGuessText.color = Color.red;
+        controller.submitGuessText.fontSize = 20;
+        controller.submitGuessText.text = "5 characters pls";
+        controller.submitGuessText.maxVisibleLines = 2;
     }
 
-    static public void textReset()
+    public void textReset()
     {
-        WordleController.staticPlayerInputText.color = Color.black;
-        WordleController.staticSubmitGuessText.color = Color.black;
-        WordleController.staticSubmitGuessText.text = "Submit";
-        WordleController.staticSubmitGuessText.fontSize = 24;
-        WordleController.staticSubmitGuessText.maxVisibleLines = 1;
+        controller.playerInputText.color = Color.black;
+        controller.submitGuessText.color = Color.black;
+        controller.submitGuessText.text = "Submit";
+        controller.submitGuessText.fontSize = 24;
+        controller.submitGuessText.maxVisibleLines = 1;
     }
 
-    static public void foundNumbers()
+    public void foundNumbers()
     {
-        WordleController.staticPlayerInputText.color = Color.red;
-        WordleController.staticSubmitGuessText.color = Color.red;
-        WordleController.staticSubmitGuessText.fontSize = 18;
-        WordleController.staticSubmitGuessText.text = "No Numbers";
+        controller.playerInputText.color = Color.red;
+        controller.submitGuessText.color = Color.red;
+        controller.submitGuessText.fontSize = 18;
+        controller.submitGuessText.text = "No Numbers";
     }
 
-    static public void viewLoseGame()
+    public void viewLoseGame()
     {
-        WordleController.staticPlayerInput.text = "<b>" + WordleController.staticPlayerInput.text + "</b>";
-        WordleController.staticSubmitGuessText.color = Color.red;
-        WordleController.staticSubmitGuessText.fontSize = 16;
-        WordleController.staticSubmitGuessText.maxVisibleLines = 2;
-        WordleController.staticSubmitGuessText.text = "<b>The word was " + WordleModel.correctAnswer + "</b>";
+        controller.playerInput.text = "<b>" + controller.playerInput.text + "</b>";
+        controller.submitGuessText.color = Color.red;
+        controller.submitGuessText.fontSize = 16;
+        controller.submitGuessText.maxVisibleLines = 2;
+        controller.submitGuessText.text = "<b>The word was " + model.correctAnswer + "</b>";
+    }
+
+    public void viewWinGame()
+    {
+        controller.playerInput.text = "<b>" + controller.playerInput.text + "</b>";
+        controller.submitGuessText.color = Color.green;
+        model.currentAttempt--;
+        if (model.currentAttempt == 1)
+        {
+            controller.submitGuessText.fontSize = 29;
+            controller.submitGuessText.text = "HOW?!?";
+        }
+        else if (model.currentAttempt == 2)
+        {
+            controller.submitGuessText.fontSize = 20;
+            controller.submitGuessText.text = "Outstanding!";
+        }
+        else if (model.currentAttempt == 3)
+        {
+            controller.submitGuessText.fontSize = 25;
+            controller.submitGuessText.text = "Very good";
+        }
+        else if (model.currentAttempt == 4)
+        {
+            controller.submitGuessText.fontSize = 25;
+            controller.submitGuessText.text = "You got it!";
+        }
+        else if (model.currentAttempt == 5)
+        {
+            controller.submitGuessText.fontSize = 32;
+            controller.submitGuessText.text = "Alright";
+        }
+        else if (model.currentAttempt == 6)
+        {
+            controller.submitGuessText.fontSize = 34;
+            controller.submitGuessText.text = "PHEW";
+        }
     }
 
 }

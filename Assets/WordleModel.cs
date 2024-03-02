@@ -1,31 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class Cells
 {
-    public int cellsRows;
-    public int cellsColumns;
+    public char letter;
+    public Color color;
 
-    public Cells(int r, int c)
+    public Cells(char l, Color c)
     {
-        cellsRows = r;
-        cellsColumns = c;
+        letter = l;
+        color = c;
     }
 }
 
 public class WordleModel : MonoBehaviour
 {
 
-    static public int currentAttempt = 1;
-    public Cells[,] cells = new Cells[6, 5];
+    public int currentAttempt;
+    public Cells[,] cells = new Cells[6,5];
     [SerializeField] TextAsset possibleAnswersAsset;
     [SerializeField] TextAsset allowedWordsAsset;
-    static string[] possibleAnswers;
-    static public string[] allowedWords;
-    static public string correctAnswer;
+    public string[] possibleAnswers;
+    public string[] allowedWords;
+    public string correctAnswer;
+    [SerializeField] WordleView view;
+    [SerializeField] WordleController controller;
     // Start is called before the first frame update
     void Start()
     {
@@ -47,17 +50,49 @@ public class WordleModel : MonoBehaviour
         Debug.Log(correctAnswer);
     }
 
-    public static bool isValidGuess(string s)
+    public bool isValidGuess(string s)
     {
         if(s == correctAnswer)
             return true;
         return false;
     }
 
-    void UpdateCells()
+    public void UpdateCells()
     {
-
+        // Setting up letters
+        int temp = currentAttempt - 2;
+        string theWord = controller.playerInput.text;
+        //Debug.Log(theWord[0]);
+        //Debug.Log(theWord[1]);
+        //Debug.Log(theWord[2]);
+        //Debug.Log(theWord[3]);
+        //Debug.Log(theWord[4]);
+        //GameObject theCurrentRow = view.rows[temp];
+        //char currentChar;
+        GameObject currentRow = view.rows[temp];
+        for (int i = 0; i < 5; i++)
+        {
+            string currentChar = theWord[i].ToString();
+            TMP_Text wordChar = currentRow.transform.GetChild(i).GetComponentInChildren<TMP_Text>();
+            wordChar.text = currentChar;
+            Debug.Log(wordChar.text);
+            //Image currentCell = currentRow.transform.GetChild(j).GetComponent<Image>();
+            //currentCell.color = Color.white;
+        }
     }
+
+    /*for (int i = 0; i < 6; i++)
+        {
+            GameObject currentRow = rows[i];
+            //Debug.Log("Ok");
+            for (int j = 0; j < 5; j++)
+            {
+                Image currentCell = currentRow.transform.GetChild(j).GetComponent<Image>();
+                currentCell.color = Color.white;
+                //Debug.Log("Nice");
+            }
+        }*/
+
 
     public void resetGame()
     {
